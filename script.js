@@ -1,270 +1,213 @@
-/* ===========================
-   PK TECH Billing System
-   script.js - Part 1
-=========================== */
+// ==========================================
+// STATE MANAGEMENT & INITIALIZATION
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    initApp();
+    setInterval(updateDateTime, 1000);
+    
+    // Register Service Worker for Offline Capabilities
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker Registered'))
+            .catch(err => console.log('Service Worker Error', err));
+    }
+});
 
-// Invoice Number
-let invoice = localStorage.getItem("pktech_invoice") || 1;
+function initApp() {
+    updateDateTime();
+    generateInvoiceNo();
+    document.getElementById('items-body').innerHTML = '';
+    addItemRow(); // Add one empty row initially
+    resetCalculations();
+}
 
-document.getElementById("invoice").value =
-    "INV-" + String(invoice).padStart(6, "0");
-
-// Date & Time
+// ==========================================
+// DATE & TIME
+// ==========================================
 function updateDateTime() {
-
     const now = new Date();
-
-    document.getElementById("date").value =
-        now.toLocaleDateString("en-GB");
-
-    document.getElementById("time").value =
-        now.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit"
-        });
-
+    
+    const dateOpts = { day: '2-digit', month: 'short', year: 'numeric' };
+    const timeOpts = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+    
+    document.getElementById('current-date').innerText = now.toLocaleDateString('en-GB', dateOpts);
+    document.getElementById('current-time').innerText = now.toLocaleTimeString('en-US', timeOpts);
 }
 
-updateDateTime();
+function getFormattedDate() {
+    return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
 
-// ==========================
-// Item Table
-// ==========================
+function getFormattedTime() {
+    return new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+}
 
-const itemBody = document.getElementById("itemBody");
-const addItemBtn = document.getElementById("addItemBtn");
+// ==========================================
+// INVOICE LOGIC
+// ==========================================
+function generateInvoiceNo() {
+    let lastInvoice = localStorage.getItem('pktech_last_invoice');
+    if (!lastInvoice) {
+        lastInvoice = 1000; // Starting number
+    } else {
+        lastInvoice = parseInt(lastInvoice);
+    }
+    
+    // Auto increment logic happens when "New Bill" is clicked. 
+    // Here we just display the current ongoing invoice.
+    document.getElementById('invoice-no').value = `INV-${lastInvoice}`;
+}
 
-addItemBtn.addEventListener("click", addItem);
+function incrementInvoiceNo() {
+    let lastInvoice = localStorage.getItem('pktech_last_invoice') || 1000;
+    localStorage.setItem('pktech_last_invoice', parseInt(lastInvoice) + 1);
+    generateInvoiceNo();
+}
 
-// প্রথম Row
-addItem();
-
-function addItem() {
-
-    const tr = document.createElement("tr");
-
+// ==========================================
+// DYNAMIC TABLE ROWS
+// ==========================================
+function addItemRow() {
+    const tbody = document.getElementById('items-body');
+    const tr = document.createElement('tr');
+    
     tr.innerHTML = `
-
-<td>
-
-<input
-type="text"
-class="itemName"
-placeholder="Item Name">
-
-</td>
-
-<td>
-
-<input
-type="number"
-class="qty"
-value="1"
-min="1">
-
-</td>
-
-<td>
-
-<input
-type="number"
-class="price"
-value="0"
-min="0">
-
-</td>
-
-<td class="lineTotal">
-
-0.00
-
-</td>
-
-<td>
-
-<button
-class="remove">
-
-✕
-
-</button>
-
-</td>
-
-`;
-
-    itemBody.appendChild(tr);
-
+        <td><input type="text" class="item-input item-name" placeholder="Item Name"></td>
+        <td><input type="number" class="item-input calc-input item-qty" value="1" min="1" onkeyup="calculateRow(this)" onchange="calculateRow(this)"></td>
+        <td><input type="number" class="item-input calc-input item-price" value="0" min="0" onkeyup="calculateRow(this)" onchange="calculateRow(this)"></td>
+        <td><input type="text" class="item-input calc-input item-total" value="0" readonly></td>
+        <td><button class="btn-del" onclick="deleteRow(this)">✕</button></td>
+    `;
+    tbody.appendChild(tr);
 }
 
-// ==========================
-// Remove Item
-// ==========================
-
-itemBody.addEventListener("click", function(e){
-
-    if(e.target.classList.contains("remove")){
-
-        e.target.closest("tr").remove();
-
+function deleteRow(btn) {
+    const row = btn.closest('tr');
+    const tbody = document.getElementById('items-body');
+    
+    // Prevent deleting if it's the last row
+    if (tbody.children.length > 1) {
+        row.remove();
+        calculateTotal();
     }
+}
 
-});
+// ==========================================
+// CALCULATIONS
+// ==========================================
+function calculateRow(element) {
+    const row = element.closest('tr');
+    const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+    const price = parseFloat(row.querySelector('.item-price').value) || 0;
+    const total = qty * price;
+    
+    row.querySelector('.item-total').value = total.toFixed(2);
+    calculateTotal();
+}
 
-/* ===========================
-   Calculation
-=========================== */
-
-document.addEventListener("input", function (e) {
-
-    if (
-        e.target.classList.contains("qty") ||
-        e.target.classList.contains("price") ||
-        e.target.id === "discount" ||
-        e.target.id === "paid"
-    ) {
-
-        calculateBill();
-
-    }
-
-});
-
-function calculateBill() {
-
+function calculateTotal() {
     let subtotal = 0;
+    const rowTotals = document.querySelectorAll('.item-total');
+    
+    rowTotals.forEach(input => {
+        subtotal += parseFloat(input.value) || 0;
+    });
+    
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
+    const grandTotal = subtotal - discount;
+    const paid = parseFloat(document.getElementById('paid-amount').value) || 0;
+    let due = grandTotal - paid;
+    
+    if (due < 0) due = 0; // Prevent negative due
 
-    document.querySelectorAll("#itemBody tr").forEach(row => {
+    // Update UI
+    document.getElementById('ui-subtotal').innerText = `৳ ${subtotal.toFixed(2)}`;
+    document.getElementById('ui-grand-total').innerText = `৳ ${grandTotal.toFixed(2)}`;
+    document.getElementById('ui-due').innerText = `৳ ${due.toFixed(2)}`;
+}
 
-        const qty = parseFloat(row.querySelector(".qty").value) || 0;
+function resetCalculations() {
+    document.getElementById('discount').value = '0';
+    document.getElementById('paid-amount').value = '0';
+    calculateTotal();
+}
 
-        const price = parseFloat(row.querySelector(".price").value) || 0;
+// ==========================================
+// ACTIONS
+// ==========================================
+function newBill() {
+    if(confirm("Are you sure you want to start a new bill?")) {
+        incrementInvoiceNo();
+        document.getElementById('customer-name').value = '';
+        document.getElementById('customer-mobile').value = '';
+        document.getElementById('items-body').innerHTML = '';
+        addItemRow();
+        resetCalculations();
+    }
+}
 
-        const total = qty * price;
+// ==========================================
+// PRINT RECEIPT LOGIC
+// ==========================================
+function printReceipt() {
+    // 1. Gather Data from UI
+    const invoice = document.getElementById('invoice-no').value;
+    let customer = document.getElementById('customer-name').value;
+    if(!customer) customer = "Walk-in Customer";
+    const mobile = document.getElementById('customer-mobile').value || "N/A";
+    
+    // 2. Populate Print Layout Header
+    document.getElementById('pr-invoice').innerText = invoice;
+    document.getElementById('pr-date').innerText = getFormattedDate();
+    document.getElementById('pr-time').innerText = getFormattedTime();
+    document.getElementById('pr-customer').innerText = customer;
+    document.getElementById('pr-mobile').innerText = mobile;
 
-        row.querySelector(".lineTotal").innerText =
-            total.toFixed(2);
+    // 3. Populate Print Layout Items
+    const prItemsBody = document.getElementById('pr-items');
+    prItemsBody.innerHTML = ''; // clear previous
+    
+    const rows = document.querySelectorAll('#items-body tr');
+    let hasItems = false;
 
-        subtotal += total;
-
+    rows.forEach(row => {
+        const name = row.querySelector('.item-name').value;
+        const qty = row.querySelector('.item-qty').value;
+        const price = row.querySelector('.item-price').value;
+        const total = row.querySelector('.item-total').value;
+        
+        // Only print rows that have a name or total > 0
+        if(name.trim() !== '' || parseFloat(total) > 0) {
+            hasItems = true;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="text-align: left; padding-right:5px;">${name || 'Item'}</td>
+                <td style="text-align: center;">${qty}</td>
+                <td style="text-align: center;">${price}</td>
+                <td style="text-align: right;">${total}</td>
+            `;
+            prItemsBody.appendChild(tr);
+        }
     });
 
-    document.getElementById("subtotal").innerText =
-        "৳" + subtotal.toFixed(2);
-
-    const discount =
-        parseFloat(document.getElementById("discount").value) || 0;
-
-    let grandTotal = subtotal - discount;
-
-    if (grandTotal < 0)
-        grandTotal = 0;
-
-    document.getElementById("grandTotal").innerText =
-        "৳" + grandTotal.toFixed(2);
-
-    const paid =
-        parseFloat(document.getElementById("paid").value) || 0;
-
-    let due = grandTotal - paid;
-
-    if (due < 0)
-        due = 0;
-
-    document.getElementById("due").value =
-        due.toFixed(2);
-
-}
-
-/* প্রথমবার চালু হলে */
-
-calculateBill();
-
-/* ===========================
-   PK TECH Billing System
-   script.js - Part 3
-=========================== */
-
-// Print Button
-document.getElementById("printBtn").addEventListener("click", function () {
-
-    const customer = document.getElementById("customer").value.trim();
-
-    if (customer === "") {
-        alert("Please enter Customer Name.");
-        document.getElementById("customer").focus();
+    if(!hasItems) {
+        alert("Please add items to the cart before printing.");
         return;
     }
 
-    calculateBill();
+    // 4. Populate Print Layout Totals
+    document.getElementById('pr-subtotal').innerText = document.getElementById('ui-subtotal').innerText;
+    document.getElementById('pr-discount').innerText = `৳ ${parseFloat(document.getElementById('discount').value || 0).toFixed(2)}`;
+    document.getElementById('pr-grand').innerText = document.getElementById('ui-grand-total').innerText;
 
+    // 5. Populate Print Layout Payment
+    const method = document.getElementById('payment-method').value;
+    const paid = parseFloat(document.getElementById('paid-amount').value || 0).toFixed(2);
+    
+    document.getElementById('pr-method').innerText = method;
+    document.getElementById('pr-paid').innerText = `৳ ${paid}`;
+    document.getElementById('pr-due').innerText = document.getElementById('ui-due').innerText;
+
+    // 6. Trigger Browser Print
     window.print();
-
-    // Auto Next Invoice
-    invoice++;
-
-    localStorage.setItem("pktech_invoice", invoice);
-
-    document.getElementById("invoice").value =
-        "INV-" + String(invoice).padStart(6, "0");
-
-    // Update Date & Time
-    updateDateTime();
-
-});
-
-// ======================
-// Clear Button
-// ======================
-
-document.getElementById("clearBtn").addEventListener("click", function () {
-
-    document.getElementById("customer").value = "";
-    document.getElementById("mobile").value = "";
-
-    document.getElementById("discount").value = 0;
-
-    document.getElementById("paid").value = 0;
-
-    document.getElementById("due").value = 0;
-
-    document.getElementById("payment").selectedIndex = 0;
-
-    itemBody.innerHTML = "";
-
-    addItem();
-
-    calculateBill();
-
-});
-
-// ======================
-// Payment Logic
-// ======================
-
-document.getElementById("payment").addEventListener("change", function () {
-
-    const method = this.value;
-
-    const paid = document.getElementById("paid");
-
-    if (method === "Cash" || method === "Online Payment") {
-
-        paid.value = document
-            .getElementById("grandTotal")
-            .innerText.replace("৳", "");
-
-    }
-
-    if (method === "Due") {
-
-        paid.value = 0;
-
-    }
-
-    calculateBill();
-
-});
-
-// প্রথমবার Payment হিসাব
-document.getElementById("payment").dispatchEvent(new Event("change"));
+}
