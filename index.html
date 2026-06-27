@@ -3,32 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PK TECH - POS System</title>
+    <title>PK TECH - Premium POS</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#f4f5f7">
+    <meta name="theme-color" content="#f0f2f5">
 </head>
-<body>
+<body class="fade-in-load">
 
+    <!-- ======================= -->
+    <!-- POS APPLICATION UI      -->
+    <!-- ======================= -->
     <div id="pos-app">
-        <header class="app-header">
+        <header class="app-header premium-glass">
             <div class="brand">
-                <img src="logo.png" alt="PK TECH Logo" class="logo" onerror="this.style.display='none'">
+                <div class="logo-container" id="logo-container">
+                    <img src="logo.png" alt="PK TECH Logo" class="logo" id="brand-logo" onerror="handleLogoError()">
+                </div>
                 <div class="brand-info">
                     <h1>PK TECH</h1>
-                    <p>ISP & Networking Solution</p>
-                    <p class="phone">+880 1750-841314</p>
+                    <p class="subtitle">ISP & Networking Solution</p>
+                    <p class="phone">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        +880 1750-841314
+                    </p>
                 </div>
             </div>
             <div class="datetime">
-                <div class="date-box" id="current-date"></div>
-                <div class="time-box" id="current-time"></div>
+                <div class="date-box" id="current-date">--</div>
+                <div class="time-box" id="current-time">--:--:--</div>
             </div>
         </header>
 
         <main class="main-content">
+            <!-- Left Column: Customer & Items -->
             <div class="left-col">
-                <section class="card customer-card">
+                <section class="card customer-card slide-up">
                     <h2 class="card-title">Billing Details</h2>
                     <div class="form-grid">
                         <div class="form-group">
@@ -46,7 +55,7 @@
                     </div>
                 </section>
 
-                <section class="card items-card">
+                <section class="card items-card slide-up delay-1">
                     <h2 class="card-title">Cart Items</h2>
                     <div class="table-responsive">
                         <table class="pos-table" id="items-table">
@@ -54,29 +63,30 @@
                                 <tr>
                                     <th style="width: 45%;">Item Name</th>
                                     <th style="width: 15%;">Qty</th>
-                                    <th style="width: 20%;">Unit Price</th>
-                                    <th style="width: 15%;">Total</th>
+                                    <th style="width: 20%;">Unit Price (৳)</th>
+                                    <th style="width: 15%;">Total (৳)</th>
                                     <th style="width: 5%;"></th>
                                 </tr>
                             </thead>
                             <tbody id="items-body">
-                                </tbody>
+                                <!-- Dynamic rows go here -->
+                            </tbody>
                         </table>
                     </div>
-                    <button class="btn btn-primary btn-add" onclick="addItemRow()">+ Add New Item</button>
+                    <button class="btn btn-add" onclick="addItemRow()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add New Item
+                    </button>
                 </section>
             </div>
 
-            <div class="right-col">
-                <section class="card summary-card">
+            <!-- Right Column: Summary & Actions -->
+            <div class="right-col slide-up delay-2">
+                <section class="card summary-card gradient-border">
                     <h2 class="card-title">Order Summary</h2>
                     <div class="summary-row">
-                        <span>Subtotal</span>
-                        <span id="ui-subtotal">৳ 0.00</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Discount</span>
-                        <input type="number" id="discount" class="calc-input" value="0" min="0" onkeyup="calculateTotal()">
+                        <span class="text-light">Subtotal</span>
+                        <span id="ui-subtotal" class="font-medium">৳ 0.00</span>
                     </div>
                     <div class="summary-row grand-total">
                         <span>Grand Total</span>
@@ -84,38 +94,26 @@
                     </div>
                 </section>
 
-                <section class="card payment-card">
-                    <h2 class="card-title">Payment Information</h2>
-                    <div class="form-group">
-                        <label>Payment Method</label>
-                        <select id="payment-method">
-                            <option value="Cash">Cash</option>
-                            <option value="Mobile Banking">Mobile Banking (bKash/Nagad)</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Paid Amount</label>
-                        <input type="number" id="paid-amount" class="calc-input large-input" value="0" min="0" onkeyup="calculateTotal()">
-                    </div>
-                    <div class="summary-row due-total">
-                        <span>Due Amount</span>
-                        <span id="ui-due">৳ 0.00</span>
-                    </div>
-                </section>
-
                 <div class="action-buttons">
-                    <button class="btn btn-print" onclick="printReceipt()">🖨️ Print Receipt</button>
-                    <button class="btn btn-new" onclick="newBill()">📄 New Bill</button>
+                    <button class="btn btn-print pulse-hover" onclick="printReceipt()">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        Print Receipt
+                    </button>
+                    <button class="btn btn-new" onclick="newBill()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        New Bill
+                    </button>
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- ======================= -->
+    <!-- THERMAL RECEIPT (80mm)  -->
+    <!-- ======================= -->
     <div id="print-receipt">
         <div class="receipt-header">
-            <img src="logo.png" alt="Logo" class="receipt-logo" onerror="this.style.display='none'">
-            <h2>PK TECH</h2>
+            <h2 class="print-brand">PK TECH</h2>
             <p>ISP & Networking Solution</p>
             <p>+880 1750-841314</p>
         </div>
@@ -141,24 +139,14 @@
                     <th style="text-align: right;">Total</th>
                 </tr>
             </thead>
-            <tbody id="pr-items">
-                </tbody>
+            <tbody id="pr-items"></tbody>
         </table>
 
         <div class="receipt-divider"></div>
 
         <div class="receipt-totals">
             <div class="total-row"><span>Subtotal:</span> <span id="pr-subtotal"></span></div>
-            <div class="total-row"><span>Discount:</span> <span id="pr-discount"></span></div>
             <div class="total-row grand"><span>Grand Total:</span> <span id="pr-grand"></span></div>
-        </div>
-
-        <div class="receipt-divider"></div>
-
-        <div class="receipt-payment">
-            <div class="total-row"><span>Method:</span> <span id="pr-method"></span></div>
-            <div class="total-row"><span>Paid:</span> <span id="pr-paid"></span></div>
-            <div class="total-row"><span>Due:</span> <span id="pr-due"></span></div>
         </div>
 
         <div class="receipt-divider"></div>
