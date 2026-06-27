@@ -1,401 +1,416 @@
-/* ===========================
-   PK TECH Billing System
-   style.css
-=========================== */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+/* =============================== */
+/* VARIABLES & RESET               */
+/* =============================== */
+:root {
+    --bg-color: #f4f5f7;
+    --card-bg: #ffffff;
+    --primary: #0056b3;
+    --primary-hover: #004494;
+    --danger: #dc3545;
+    --text-main: #2c3e50;
+    --text-light: #6c757d;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-body{
-    background:#f3f4f6;
-    padding:20px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-.container{
-    max-width:950px;
-    margin:auto;
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
 }
 
-.receipt{
-    background:#fff;
-    border-radius:12px;
-    padding:25px;
-    box-shadow:0 5px 15px rgba(0,0,0,.15);
+/* =============================== */
+/* POS APPLICATION LAYOUT          */
+/* =============================== */
+#pos-app {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100vh;
 }
 
-/* ================= HEADER ================= */
-
-.header{
-    text-align:center;
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
 }
 
-.logo{
-    width:80px;
-    margin-bottom:10px;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-.header h1{
-    font-size:32px;
-    font-weight:900;
-    letter-spacing:1px;
+.logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
 }
 
-.header p{
-    font-size:14px;
-    font-weight:bold;
-    color:#555;
-    margin-top:4px;
+.brand-info h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
 }
 
-/* ================= LINE ================= */
-
-hr{
-    margin:20px 0;
-    border:none;
-    border-top:2px dashed #bbb;
+.brand-info p {
+    font-size: 13px;
+    color: var(--text-light);
 }
 
-/* ================= TITLE ================= */
-
-h2{
-    font-size:18px;
-    margin-bottom:15px;
+.brand-info .phone {
+    font-weight: 600;
+    color: var(--text-main);
 }
 
-/* ================= GRID ================= */
-
-.invoice,
-.customer,
-.payment{
-
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-
+.datetime {
+    text-align: right;
+    font-size: 18px;
+    font-weight: 600;
 }
 
-.customer{
-    grid-template-columns:repeat(2,1fr);
+.time-box {
+    color: var(--primary);
+    font-size: 22px;
 }
 
-/* ================= FORM ================= */
-
-.input-group{
-    display:flex;
-    flex-direction:column;
+.main-content {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    overflow: hidden;
 }
 
-label{
-    font-size:14px;
-    font-weight:bold;
-    margin-bottom:6px;
+.left-col {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
 }
 
-input,
-select{
-
-    width:100%;
-    padding:10px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    font-size:15px;
-    outline:none;
-
+.right-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-input:focus,
-select:focus{
-
-    border-color:#000;
-
+/* =============================== */
+/* CARDS & FORMS                   */
+/* =============================== */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
 }
 
-/* ================= TABLE ================= */
-
-.item-table{
-
-    width:100%;
-    border-collapse:collapse;
-    margin-top:10px;
-
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
 }
 
-.item-table th{
-
-    background:#111827;
-    color:#fff;
-    padding:10px;
-    font-size:14px;
-
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
 }
 
-.item-table td{
-
-    border-bottom:1px solid #ddd;
-    padding:8px;
-
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.item-table td input{
-
-    width:100%;
-    border:none;
-    background:transparent;
-    text-align:center;
-
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
 }
 
-.item-table td:first-child input{
-
-    text-align:left;
-
+input, select {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s;
 }
 
-/* ================= BUTTON ================= */
-
-button{
-
-    cursor:pointer;
-    border:none;
-    border-radius:8px;
-    font-weight:bold;
-    transition:.2s;
-
+input:focus, select:focus {
+    border-color: var(--primary);
 }
 
-#addItemBtn{
-
-    margin-top:15px;
-    background:#2563eb;
-    color:#fff;
-    padding:10px 18px;
-
+.readonly-input {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: var(--primary);
 }
 
-#addItemBtn:hover{
-
-    background:#1d4ed8;
-
+.calc-input {
+    text-align: right;
+    font-weight: bold;
 }
 
-.action-buttons{
-
-    display:flex;
-    gap:15px;
-
+.large-input {
+    font-size: 20px;
+    color: #27ae60;
 }
 
-#printBtn{
-
-    flex:1;
-    background:#16a34a;
-    color:#fff;
-    padding:14px;
-
+/* =============================== */
+/* TABLE                           */
+/* =============================== */
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: 15px;
 }
 
-#printBtn:hover{
-
-    background:#15803d;
-
+.pos-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-#clearBtn{
-
-    flex:1;
-    background:#dc2626;
-    color:#fff;
-    padding:14px;
-
+.pos-table th {
+    background: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    font-size: 13px;
+    color: var(--text-light);
 }
 
-#clearBtn:hover{
-
-    background:#b91c1c;
-
+.pos-table td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
 }
 
-/* ================= SUMMARY ================= */
-
-.summary{
-
-    width:320px;
-    margin-left:auto;
-
+.item-input {
+    width: 100%;
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 8px;
+    font-size: 14px;
 }
 
-.summary-row{
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin:10px 0;
-
+.item-input:focus {
+    border: 1px solid var(--primary);
+    background: white;
 }
 
-.summary-row input{
-
-    width:120px;
-
+.btn-del {
+    background: #ffe3e5;
+    color: var(--danger);
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-.total-row{
-
-    font-size:22px;
-    font-weight:900;
-    border-top:2px solid #000;
-    padding-top:10px;
-
+/* =============================== */
+/* SUMMARY & TOTALS                */
+/* =============================== */
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: 500;
 }
 
-#grandTotal{
-
-    color:#000;
-
+.grand-total {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px dashed var(--border);
 }
 
-/* ================= MOBILE ================= */
-
-@media(max-width:768px){
-
-.invoice,
-.customer,
-.payment{
-
-grid-template-columns:1fr;
-
+.due-total {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--danger);
+    margin-top: 15px;
 }
 
-.summary{
-
-width:100%;
-
+/* =============================== */
+/* BUTTONS                         */
+/* =============================== */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
 }
 
-.action-buttons{
-
-flex-direction:column;
-
+.btn-add {
+    width: 100%;
+    background: #e9ecef;
+    color: var(--text-main);
 }
 
-.logo{
+.btn-add:hover { background: #dde2e6; }
 
-width:65px;
-
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.header h1{
+.btn-print {
+    background: var(--primary);
+    color: white;
+    padding: 18px;
+    font-size: 18px;
+}
+.btn-print:hover { background: var(--primary-hover); }
 
-font-size:26px;
+.btn-new {
+    background: white;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+.btn-new:hover { background: #f8f9fa; }
 
+/* =============================== */
+/* HIDDEN PRINT LAYOUT ON SCREEN   */
+/* =============================== */
+#print-receipt {
+    display: none;
 }
 
+/* =============================== */
+/* RESPONSIVE                      */
+/* =============================== */
+@media (max-width: 992px) {
+    .main-content { flex-direction: column; overflow: visible;}
+    #pos-app { height: auto; }
 }
 
-/* ================= PRINT ================= */
+/* =============================== */
+/* THERMAL PRINTING RULES (80mm)   */
+/* =============================== */
+@media print {
+    /* Hide the App */
+    #pos-app {
+        display: none !important;
+    }
 
-@media print{
+    /* Reset Body Margins */
+    body, html {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
 
-body{
+    @page {
+        margin: 0;
+        size: 80mm auto; /* Standard 80mm thermal paper width */
+    }
 
-background:#fff;
-padding:0;
+    /* Show Print Receipt */
+    #print-receipt {
+        display: block !important;
+        width: 300px; /* ~80mm */
+        margin: 0 auto;
+        padding: 10px;
+        font-family: monospace, sans-serif;
+        color: black;
+        font-size: 12px;
+    }
 
-}
+    .receipt-header {
+        text-align: center;
+        margin-bottom: 10px;
+    }
 
-.container{
+    .receipt-logo {
+        width: 40px;
+        height: auto;
+        margin: 0 auto 5px;
+    }
 
-max-width:80mm;
-width:80mm;
+    .receipt-header h2 {
+        font-size: 18px;
+        margin: 0 0 2px 0;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
 
-}
+    .receipt-header p {
+        margin: 0;
+        font-size: 11px;
+    }
 
-.receipt{
+    .receipt-divider {
+        border-top: 1px dashed black;
+        margin: 8px 0;
+    }
 
-box-shadow:none;
-border:none;
-border-radius:0;
-padding:3mm;
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+    }
 
-}
+    .receipt-items {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-button{
+    .receipt-items th, .receipt-items td {
+        padding: 4px 0;
+        vertical-align: top;
+    }
+    
+    .receipt-items th {
+        border-bottom: 1px solid black;
+    }
 
-display:none !important;
+    .receipt-totals {
+        margin-top: 5px;
+    }
 
-}
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+    }
 
-input,
-select{
+    .total-row.grand {
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 4px;
+        padding-top: 4px;
+        border-top: 1px solid black;
+    }
 
-border:none;
-padding:0;
-font-size:12px;
-font-weight:bold;
-background:transparent;
-
-}
-
-.logo{
-
-width:55px;
-
-}
-
-.header h1{
-
-font-size:22px;
-
-}
-
-.header p{
-
-font-size:11px;
-
-}
-
-.item-table{
-
-font-size:11px;
-
-}
-
-.item-table th{
-
-background:#fff;
-color:#000;
-border-top:1px solid #000;
-border-bottom:1px solid #000;
-
-}
-
-.item-table td{
-
-padding:4px;
-border-bottom:1px dashed #000;
-
-}
-
-.summary{
-
-width:100%;
-
-}
-
-.total-row{
-
-font-size:18px;
-
-}
-
-hr{
-
-border-top:1px dashed #000;
-
-}
-
+    .receipt-footer {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 10px;
+    }
 }
