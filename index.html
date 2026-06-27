@@ -1,279 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>PK TECH Billing</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PK TECH - POS System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f4f5f7">
 </head>
-
 <body>
 
-<div class="container">
-
-<div class="receipt">
-
-<!-- Header -->
-
-<div class="header">
-
-<img src="logo.png" class="logo">
-
-<h1>PK TECH</h1>
-
-<p>ISP & Networking Solution</p>
-
-<p>+880 1750-841314</p>
-
-</div>
-
-<hr>
-
-<!-- Invoice -->
-
-<div class="invoice">
-
-<div class="input-group">
-
-<label>Invoice No</label>
-
-<input
-type="text"
-id="invoice"
-readonly>
-
-</div>
-
-<div class="input-group">
-
-<label>Date</label>
-
-<input
-type="text"
-id="date"
-readonly>
-
-</div>
-
-<div class="input-group">
-
-<label>Time</label>
-
-<input
-type="text"
-id="time"
-readonly>
-
-</div>
-
-</div>
-
-<hr>
-
-<!-- Customer -->
-
-<h2>Customer Information</h2>
-
-<div class="customer">
-
-<div class="input-group">
-
-<label>Customer Name</label>
-
-<input
-type="text"
-id="customer"
-placeholder="Enter Customer Name">
-
-</div>
-
-<div class="input-group">
-
-<label>Mobile Number</label>
-
-<input
-type="text"
-id="mobile"
-placeholder="01XXXXXXXXX">
-
-</div>
-
-</div>
-
-<hr>
-
-<!-- Payment -->
-
-<h2>Payment</h2>
-
-<div class="payment">
-
-<div class="input-group">
-
-<label>Payment Method</label>
-
-<select id="payment">
-
-<option value="Cash">Cash</option>
-
-<option value="Online Payment">Online Payment</option>
-
-<option value="Due">Due</option>
-
-</select>
-
-</div>
-
-<div class="input-group">
-
-<label>Paid Amount</label>
-
-<input
-type="number"
-id="paid"
-value="0">
-
-</div>
-
-<div class="input-group">
-
-<label>Due Amount</label>
-
-<input
-type="number"
-id="due"
-readonly
-value="0">
-
-</div>
-
-</div>
-
-<hr>
-<!-- ========================= -->
-<!-- ITEMS -->
-<!-- ========================= -->
-
-<h2>Items</h2>
-
-<table class="item-table">
-
-<thead>
-
-<tr>
-
-<th style="width:45%">Item Name</th>
-
-<th style="width:12%">Qty</th>
-
-<th style="width:18%">Unit Price</th>
-
-<th style="width:20%">Total</th>
-
-<th style="width:5%"></th>
-
-</tr>
-
-</thead>
-
-<tbody id="itemBody">
-
-</tbody>
-
-</table>
-
-<button
-type="button"
-id="addItemBtn">
-
-+ Add Item
-
-</button>
-
-<hr>
-
-<!-- ========================= -->
-<!-- SUMMARY -->
-<!-- ========================= -->
-
-<div class="summary">
-
-<div class="summary-row">
-
-<span>Subtotal</span>
-
-<strong id="subtotal">
-
-৳0.00
-
-</strong>
-
-</div>
-
-<div class="summary-row">
-
-<span>Discount</span>
-
-<input
-type="number"
-id="discount"
-value="0"
-min="0">
-
-</div>
-
-<div class="summary-row total-row">
-
-<span>Grand Total</span>
-
-<strong id="grandTotal">
-
-৳0.00
-
-</strong>
-
-</div>
-
-</div>
-
-<hr>
-
-<!-- ========================= -->
-<!-- BUTTON -->
-<!-- ========================= -->
-
-<div class="action-buttons">
-
-<button
-id="printBtn"
-type="button">
-
-🖨️ Print Receipt
-
-</button>
-
-<button
-id="clearBtn"
-type="reset">
-
-🗑 Clear
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<script src="script.js"></script>
-
+    <div id="pos-app">
+        <header class="app-header">
+            <div class="brand">
+                <img src="logo.png" alt="PK TECH Logo" class="logo" onerror="this.style.display='none'">
+                <div class="brand-info">
+                    <h1>PK TECH</h1>
+                    <p>ISP & Networking Solution</p>
+                    <p class="phone">+880 1750-841314</p>
+                </div>
+            </div>
+            <div class="datetime">
+                <div class="date-box" id="current-date"></div>
+                <div class="time-box" id="current-time"></div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="left-col">
+                <section class="card customer-card">
+                    <h2 class="card-title">Billing Details</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Invoice No.</label>
+                            <input type="text" id="invoice-no" readonly class="readonly-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Customer Name</label>
+                            <input type="text" id="customer-name" placeholder="Walk-in Customer">
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <input type="text" id="customer-mobile" placeholder="e.g. 017XXXXXXXX">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card items-card">
+                    <h2 class="card-title">Cart Items</h2>
+                    <div class="table-responsive">
+                        <table class="pos-table" id="items-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 45%;">Item Name</th>
+                                    <th style="width: 15%;">Qty</th>
+                                    <th style="width: 20%;">Unit Price</th>
+                                    <th style="width: 15%;">Total</th>
+                                    <th style="width: 5%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="items-body">
+                                </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-primary btn-add" onclick="addItemRow()">+ Add New Item</button>
+                </section>
+            </div>
+
+            <div class="right-col">
+                <section class="card summary-card">
+                    <h2 class="card-title">Order Summary</h2>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="ui-subtotal">৳ 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Discount</span>
+                        <input type="number" id="discount" class="calc-input" value="0" min="0" onkeyup="calculateTotal()">
+                    </div>
+                    <div class="summary-row grand-total">
+                        <span>Grand Total</span>
+                        <span id="ui-grand-total">৳ 0.00</span>
+                    </div>
+                </section>
+
+                <section class="card payment-card">
+                    <h2 class="card-title">Payment Information</h2>
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <select id="payment-method">
+                            <option value="Cash">Cash</option>
+                            <option value="Mobile Banking">Mobile Banking (bKash/Nagad)</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Paid Amount</label>
+                        <input type="number" id="paid-amount" class="calc-input large-input" value="0" min="0" onkeyup="calculateTotal()">
+                    </div>
+                    <div class="summary-row due-total">
+                        <span>Due Amount</span>
+                        <span id="ui-due">৳ 0.00</span>
+                    </div>
+                </section>
+
+                <div class="action-buttons">
+                    <button class="btn btn-print" onclick="printReceipt()">🖨️ Print Receipt</button>
+                    <button class="btn btn-new" onclick="newBill()">📄 New Bill</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="print-receipt">
+        <div class="receipt-header">
+            <img src="logo.png" alt="Logo" class="receipt-logo" onerror="this.style.display='none'">
+            <h2>PK TECH</h2>
+            <p>ISP & Networking Solution</p>
+            <p>+880 1750-841314</p>
+        </div>
+        
+        <div class="receipt-divider"></div>
+
+        <div class="receipt-info">
+            <div class="info-row"><span>Inv:</span> <span id="pr-invoice"></span></div>
+            <div class="info-row"><span>Date:</span> <span id="pr-date"></span></div>
+            <div class="info-row"><span>Time:</span> <span id="pr-time"></span></div>
+            <div class="info-row"><span>Name:</span> <span id="pr-customer"></span></div>
+            <div class="info-row"><span>Mob:</span> <span id="pr-mobile"></span></div>
+        </div>
+
+        <div class="receipt-divider"></div>
+
+        <table class="receipt-items">
+            <thead>
+                <tr>
+                    <th style="text-align: left;">Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th style="text-align: right;">Total</th>
+                </tr>
+            </thead>
+            <tbody id="pr-items">
+                </tbody>
+        </table>
+
+        <div class="receipt-divider"></div>
+
+        <div class="receipt-totals">
+            <div class="total-row"><span>Subtotal:</span> <span id="pr-subtotal"></span></div>
+            <div class="total-row"><span>Discount:</span> <span id="pr-discount"></span></div>
+            <div class="total-row grand"><span>Grand Total:</span> <span id="pr-grand"></span></div>
+        </div>
+
+        <div class="receipt-divider"></div>
+
+        <div class="receipt-payment">
+            <div class="total-row"><span>Method:</span> <span id="pr-method"></span></div>
+            <div class="total-row"><span>Paid:</span> <span id="pr-paid"></span></div>
+            <div class="total-row"><span>Due:</span> <span id="pr-due"></span></div>
+        </div>
+
+        <div class="receipt-divider"></div>
+
+        <div class="receipt-footer">
+            <p>*** THANK YOU ***</p>
+            <p>Software by PK TECH</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
-
 </html>
-
