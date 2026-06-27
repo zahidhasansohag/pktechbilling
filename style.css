@@ -1,258 +1,401 @@
+/* ===========================
+   PK TECH Billing System
+   style.css
+=========================== */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 body{
-    background:#ececec;
+    background:#f3f4f6;
     padding:20px;
 }
 
 .container{
-    max-width:900px;
+    max-width:950px;
     margin:auto;
 }
 
 .receipt{
     background:#fff;
-    padding:25px;
     border-radius:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,.12);
+    padding:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
 }
+
+/* ================= HEADER ================= */
 
 .header{
     text-align:center;
 }
 
 .logo{
-    width:85px;
+    width:80px;
     margin-bottom:10px;
 }
 
 .header h1{
-    font-size:34px;
+    font-size:32px;
     font-weight:900;
     letter-spacing:1px;
 }
 
 .header p{
-    font-size:15px;
+    font-size:14px;
     font-weight:bold;
-    margin-top:3px;
+    color:#555;
+    margin-top:4px;
 }
+
+/* ================= LINE ================= */
 
 hr{
-    margin:18px 0;
+    margin:20px 0;
     border:none;
-    border-top:2px dashed #999;
+    border-top:2px dashed #bbb;
 }
 
-.top-grid{
+/* ================= TITLE ================= */
+
+h2{
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+/* ================= GRID ================= */
+
+.invoice,
+.customer,
+.payment{
+
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:15px;
+
 }
 
 .customer{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
+    grid-template-columns:repeat(2,1fr);
+}
+
+/* ================= FORM ================= */
+
+.input-group{
+    display:flex;
+    flex-direction:column;
 }
 
 label{
-    display:block;
-    font-weight:700;
+    font-size:14px;
+    font-weight:bold;
     margin-bottom:6px;
 }
 
 input,
 select{
+
     width:100%;
     padding:10px;
-    border:1px solid #bbb;
+    border:1px solid #ccc;
     border-radius:8px;
     font-size:15px;
+    outline:none;
+
 }
 
-table{
+input:focus,
+select:focus{
+
+    border-color:#000;
+
+}
+
+/* ================= TABLE ================= */
+
+.item-table{
+
     width:100%;
     border-collapse:collapse;
-    margin-top:15px;
+    margin-top:10px;
+
 }
 
-th{
-    background:#111;
+.item-table th{
+
+    background:#111827;
     color:#fff;
     padding:10px;
     font-size:14px;
+
 }
 
-td{
-    padding:8px;
+.item-table td{
+
     border-bottom:1px solid #ddd;
+    padding:8px;
+
 }
 
-td input{
+.item-table td input{
+
+    width:100%;
     border:none;
     background:transparent;
-    padding:4px;
+    text-align:center;
+
 }
+
+.item-table td:first-child input{
+
+    text-align:left;
+
+}
+
+/* ================= BUTTON ================= */
+
+button{
+
+    cursor:pointer;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    transition:.2s;
+
+}
+
+#addItemBtn{
+
+    margin-top:15px;
+    background:#2563eb;
+    color:#fff;
+    padding:10px 18px;
+
+}
+
+#addItemBtn:hover{
+
+    background:#1d4ed8;
+
+}
+
+.action-buttons{
+
+    display:flex;
+    gap:15px;
+
+}
+
+#printBtn{
+
+    flex:1;
+    background:#16a34a;
+    color:#fff;
+    padding:14px;
+
+}
+
+#printBtn:hover{
+
+    background:#15803d;
+
+}
+
+#clearBtn{
+
+    flex:1;
+    background:#dc2626;
+    color:#fff;
+    padding:14px;
+
+}
+
+#clearBtn:hover{
+
+    background:#b91c1c;
+
+}
+
+/* ================= SUMMARY ================= */
 
 .summary{
-    margin-top:15px;
+
+    width:320px;
+    margin-left:auto;
+
 }
 
-.summary .row{
+.summary-row{
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:12px;
+    margin:10px 0;
+
 }
 
-.summary .grand{
+.summary-row input{
+
+    width:120px;
+
+}
+
+.total-row{
+
     font-size:22px;
     font-weight:900;
+    border-top:2px solid #000;
+    padding-top:10px;
+
 }
 
+#grandTotal{
+
+    color:#000;
+
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:768px){
+
+.invoice,
+.customer,
 .payment{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:15px;
-}
 
-.due-box{
-    font-size:22px;
-    font-weight:bold;
-    text-align:right;
-}
-
-.buttons{
-    display:flex;
-    gap:15px;
-}
-
-button{
-    flex:1;
-    padding:14px;
-    background:#111;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
-    font-weight:700;
-}
-
-button:hover{
-    background:#333;
-}
-
-/* Mobile */
-
-@media(max-width:700px){
-
-.top-grid{
 grid-template-columns:1fr;
+
 }
 
-.customer{
-grid-template-columns:1fr;
+.summary{
+
+width:100%;
+
 }
 
-.buttons{
+.action-buttons{
+
 flex-direction:column;
-}
 
-.receipt{
-padding:15px;
 }
 
 .logo{
-width:70px;
+
+width:65px;
+
 }
 
 .header h1{
-font-size:28px;
-}
+
+font-size:26px;
 
 }
 
-/* 80mm Thermal Print */
+}
+
+/* ================= PRINT ================= */
 
 @media print{
 
 body{
+
 background:#fff;
 padding:0;
+
 }
 
 .container{
+
 max-width:80mm;
 width:80mm;
-margin:0;
+
 }
 
 .receipt{
+
 box-shadow:none;
 border:none;
-padding:2mm;
-width:80mm;
+border-radius:0;
+padding:3mm;
+
 }
 
 button{
-display:none;
+
+display:none !important;
+
 }
 
 input,
 select{
+
 border:none;
 padding:0;
 font-size:12px;
 font-weight:bold;
+background:transparent;
+
 }
 
 .logo{
+
 width:55px;
+
 }
 
 .header h1{
+
 font-size:22px;
+
 }
 
 .header p{
+
 font-size:11px;
+
 }
 
-table{
+.item-table{
+
 font-size:11px;
+
 }
 
-th{
+.item-table th{
+
 background:#fff;
 color:#000;
 border-top:1px solid #000;
 border-bottom:1px solid #000;
-padding:5px;
+
 }
 
-td{
+.item-table td{
+
 padding:4px;
 border-bottom:1px dashed #000;
+
 }
 
-.summary .grand{
+.summary{
+
+width:100%;
+
+}
+
+.total-row{
+
 font-size:18px;
+
 }
 
 hr{
-border-top:1px dashed #000;
-}
 
-#printBtn,
-#clearBtn{
-display:none;
+border-top:1px dashed #000;
+
 }
 
 }
