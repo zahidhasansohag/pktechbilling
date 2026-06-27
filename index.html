@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>PK TECH Billing</title>
 
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -15,7 +18,7 @@
 
 <div class="receipt">
 
-<!-- HEADER -->
+<!-- Header -->
 
 <div class="header">
 
@@ -31,11 +34,11 @@
 
 <hr>
 
-<!-- INVOICE -->
+<!-- Invoice -->
 
-<div class="top-grid">
+<div class="invoice">
 
-<div>
+<div class="input-group">
 
 <label>Invoice No</label>
 
@@ -46,7 +49,7 @@ readonly>
 
 </div>
 
-<div>
+<div class="input-group">
 
 <label>Date</label>
 
@@ -57,7 +60,7 @@ readonly>
 
 </div>
 
-<div>
+<div class="input-group">
 
 <label>Time</label>
 
@@ -72,18 +75,24 @@ readonly>
 
 <hr>
 
-<!-- CUSTOMER -->
+<!-- Customer -->
 
-<h3>Customer Information</h3>
+<h2>Customer Information</h2>
 
 <div class="customer">
+
+<div class="input-group">
 
 <label>Customer Name</label>
 
 <input
 type="text"
 id="customer"
-placeholder="Customer Name">
+placeholder="Enter Customer Name">
+
+</div>
+
+<div class="input-group">
 
 <label>Mobile Number</label>
 
@@ -94,100 +103,33 @@ placeholder="01XXXXXXXXX">
 
 </div>
 
-<hr>
-
-<!-- ITEM TABLE -->
-
-<h3>Items</h3>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th width="45%">Item</th>
-
-<th width="10%">Qty</th>
-
-<th width="20%">Unit Price</th>
-
-<th width="20%">Total</th>
-
-<th width="5%"></th>
-
-</tr>
-
-</thead>
-
-<tbody id="itemsBody">
-
-</tbody>
-
-</table>
-
-<button
-type="button"
-id="addItem">
-
-+ Add Item
-
-</button>
-
-<hr>
-
-<!-- SUMMARY -->
-
-<div class="summary">
-
-<div class="row">
-
-<label>Subtotal</label>
-
-<span id="subtotal">0.00</span>
-
-</div>
-
-<div class="row">
-
-<label>Discount</label>
-
-<input
-type="number"
-id="discount"
-value="0">
-
-</div>
-
-<div class="row grand">
-
-<label>Grand Total</label>
-
-<span id="grandTotal">0.00</span>
-
-</div>
-
 </div>
 
 <hr>
 
-<!-- PAYMENT -->
+<!-- Payment -->
 
-<h3>Payment</h3>
+<h2>Payment</h2>
 
 <div class="payment">
+
+<div class="input-group">
 
 <label>Payment Method</label>
 
 <select id="payment">
 
-<option>Cash</option>
+<option value="Cash">Cash</option>
 
-<option>Online</option>
+<option value="Online Payment">Online Payment</option>
 
-<option>Due</option>
+<option value="Due">Due</option>
 
 </select>
+
+</div>
+
+<div class="input-group">
 
 <label>Paid Amount</label>
 
@@ -196,12 +138,102 @@ type="number"
 id="paid"
 value="0">
 
-<div class="due-box">
+</div>
 
-Due Amount :
-<strong id="dueAmount">
+<div class="input-group">
 
-0.00
+<label>Due Amount</label>
+
+<input
+type="number"
+id="due"
+readonly
+value="0">
+
+</div>
+
+</div>
+
+<hr>
+<!-- ========================= -->
+<!-- ITEMS -->
+<!-- ========================= -->
+
+<h2>Items</h2>
+
+<table class="item-table">
+
+<thead>
+
+<tr>
+
+<th style="width:45%">Item Name</th>
+
+<th style="width:12%">Qty</th>
+
+<th style="width:18%">Unit Price</th>
+
+<th style="width:20%">Total</th>
+
+<th style="width:5%"></th>
+
+</tr>
+
+</thead>
+
+<tbody id="itemBody">
+
+</tbody>
+
+</table>
+
+<button
+type="button"
+id="addItemBtn">
+
++ Add Item
+
+</button>
+
+<hr>
+
+<!-- ========================= -->
+<!-- SUMMARY -->
+<!-- ========================= -->
+
+<div class="summary">
+
+<div class="summary-row">
+
+<span>Subtotal</span>
+
+<strong id="subtotal">
+
+৳0.00
+
+</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Discount</span>
+
+<input
+type="number"
+id="discount"
+value="0"
+min="0">
+
+</div>
+
+<div class="summary-row total-row">
+
+<span>Grand Total</span>
+
+<strong id="grandTotal">
+
+৳0.00
 
 </strong>
 
@@ -211,15 +243,23 @@ Due Amount :
 
 <hr>
 
-<div class="buttons">
+<!-- ========================= -->
+<!-- BUTTON -->
+<!-- ========================= -->
 
-<button id="printBtn">
+<div class="action-buttons">
 
-🖨 Print Receipt
+<button
+id="printBtn"
+type="button">
+
+🖨️ Print Receipt
 
 </button>
 
-<button id="clearBtn">
+<button
+id="clearBtn"
+type="reset">
 
 🗑 Clear
 
@@ -234,4 +274,6 @@ Due Amount :
 <script src="script.js"></script>
 
 </body>
+
 </html>
+
