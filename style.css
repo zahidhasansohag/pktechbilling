@@ -1,416 +1,453 @@
 /* =============================== */
-/* VARIABLES & RESET               */
+/* VARIABLES & PREMIUM RESET       */
 /* =============================== */
 :root {
-    --bg-color: #f4f5f7;
+    --bg-color: #f0f2f5;
     --card-bg: #ffffff;
-    --primary: #0056b3;
-    --primary-hover: #004494;
-    --danger: #dc3545;
-    --text-main: #2c3e50;
-    --text-light: #6c757d;
+    --primary: #0f172a;      /* Sleek dark navy */
+    --primary-hover: #1e293b;
+    --accent: #2563eb;       /* Vivid blue for buttons */
+    --accent-hover: #1d4ed8;
+    --danger: #ef4444;
+    --danger-light: #fee2e2;
+    --text-main: #1e293b;
+    --text-light: #64748b;
     --border: #e2e8f0;
-    --radius: 12px;
-    --shadow: 0 4px 15px rgba(0,0,0,0.05);
+    --border-focus: #93c5fd;
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
+    --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-main);
+    overflow-x: hidden;
 }
 
 /* =============================== */
-/* POS APPLICATION LAYOUT          */
+/* ANIMATIONS                      */
+/* =============================== */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideInRow { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+.fade-in-load { animation: fadeIn 0.8s ease-out; }
+.slide-up { animation: slideUp 0.6s ease-out forwards; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.row-animate { animation: slideInRow 0.3s ease-out forwards; }
+
+/* =============================== */
+/* POS LAYOUT                      */
 /* =============================== */
 #pos-app {
-    max-width: 1400px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
     height: 100vh;
+}
+
+.premium-glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.4);
 }
 
 .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    padding: 20px 30px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
 }
 
 .brand {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 18px;
+}
+
+/* Smart Logo Handling */
+.logo-container {
+    width: 65px;
+    height: 65px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    overflow: hidden;
 }
 
 .logo {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: white;
+}
+
+.logo-fallback-text {
+    color: white;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
 .brand-info h1 {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 26px;
+    font-weight: 800;
     color: var(--primary);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
 }
 
-.brand-info p {
+.brand-info .subtitle {
     font-size: 13px;
     color: var(--text-light);
+    font-weight: 500;
+    margin-bottom: 2px;
 }
 
 .brand-info .phone {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
     font-weight: 600;
-    color: var(--text-main);
+    color: var(--accent);
 }
 
 .datetime {
     text-align: right;
-    font-size: 18px;
-    font-weight: 600;
+}
+
+.date-box {
+    font-size: 14px;
+    color: var(--text-light);
+    font-weight: 500;
+    margin-bottom: 2px;
 }
 
 .time-box {
     color: var(--primary);
-    font-size: 22px;
+    font-size: 26px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
 }
 
 .main-content {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     flex: 1;
     overflow: hidden;
 }
 
-.left-col {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-y: auto;
-}
-
-.right-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+.left-col { flex: 7; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; padding-bottom: 20px;}
+.right-col { flex: 3; display: flex; flex-direction: column; gap: 24px; min-width: 320px; }
 
 /* =============================== */
 /* CARDS & FORMS                   */
 /* =============================== */
 .card {
     background: var(--card-bg);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-hover);
 }
 
 .card-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
 }
 
 .form-group label {
     font-size: 13px;
     font-weight: 600;
     color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-input, select {
-    padding: 10px 12px;
+input {
+    padding: 12px 16px;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 14px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 500;
+    background-color: #f8fafc;
+    color: var(--text-main);
+    transition: var(--transition);
     outline: none;
-    transition: border 0.2s;
 }
 
-input:focus, select:focus {
-    border-color: var(--primary);
+input:hover { border-color: #cbd5e1; }
+
+input:focus {
+    background-color: white;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
 }
 
 .readonly-input {
-    background-color: #f8f9fa;
-    font-weight: bold;
-    color: var(--primary);
+    background-color: #f1f5f9;
+    color: var(--accent);
+    font-weight: 700;
+    border-color: transparent;
 }
-
-.calc-input {
-    text-align: right;
-    font-weight: bold;
-}
-
-.large-input {
-    font-size: 20px;
-    color: #27ae60;
-}
+.readonly-input:focus { box-shadow: none; border-color: transparent; }
 
 /* =============================== */
-/* TABLE                           */
+/* MODERN DATA GRID (TABLE)        */
 /* =============================== */
 .table-responsive {
-    overflow-x: auto;
-    margin-bottom: 15px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 20px;
 }
 
 .pos-table {
     width: 100%;
     border-collapse: collapse;
+    background: white;
 }
 
 .pos-table th {
-    background: #f8f9fa;
-    padding: 12px;
+    background: #f8fafc;
+    padding: 14px 16px;
     text-align: left;
     font-size: 13px;
+    font-weight: 600;
     color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
 }
 
 .pos-table td {
-    padding: 10px;
-    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
 }
+
+.pos-table tr { transition: background 0.2s; }
+.pos-table tr:hover { background: #f8fafc; }
 
 .item-input {
     width: 100%;
     border: 1px solid transparent;
     background: transparent;
-    padding: 8px;
-    font-size: 14px;
-}
-
-.item-input:focus {
-    border: 1px solid var(--primary);
-    background: white;
-}
-
-.btn-del {
-    background: #ffe3e5;
-    color: var(--danger);
-    border: none;
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* =============================== */
-/* SUMMARY & TOTALS                */
-/* =============================== */
-.summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+    padding: 8px 12px;
     font-size: 15px;
     font-weight: 500;
+    border-radius: 6px;
 }
 
-.grand-total {
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--primary);
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 2px dashed var(--border);
-}
+.calc-input { font-variant-numeric: tabular-nums; font-weight: 600; }
+.item-total { color: var(--accent); font-weight: 700; }
 
-.due-total {
-    font-size: 18px;
-    font-weight: 700;
+.btn-del {
+    background: var(--danger-light);
     color: var(--danger);
-    margin-top: 15px;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: var(--transition);
+}
+
+.btn-del:hover {
+    background: var(--danger);
+    color: white;
+    transform: scale(1.05);
 }
 
 /* =============================== */
 /* BUTTONS                         */
 /* =============================== */
 .btn {
-    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
-    text-align: center;
+    transition: var(--transition);
 }
 
 .btn-add {
     width: 100%;
-    background: #e9ecef;
-    color: var(--text-main);
+    background: #f1f5f9;
+    color: var(--primary);
+    border: 1px dashed #cbd5e1;
 }
 
-.btn-add:hover { background: #dde2e6; }
+.btn-add:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+}
 
 .action-buttons {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
 }
 
 .btn-print {
-    background: var(--primary);
+    background: var(--accent);
     color: white;
     padding: 18px;
     font-size: 18px;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
 }
-.btn-print:hover { background: var(--primary-hover); }
+
+.btn-print:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
 
 .btn-new {
     background: white;
     color: var(--text-main);
     border: 1px solid var(--border);
 }
-.btn-new:hover { background: #f8f9fa; }
+
+.btn-new:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
 
 /* =============================== */
-/* HIDDEN PRINT LAYOUT ON SCREEN   */
+/* SUMMARY CARD                    */
 /* =============================== */
-#print-receipt {
-    display: none;
+.summary-card {
+    background: linear-gradient(to bottom right, #ffffff, #f8fafc);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.font-medium { font-weight: 600; }
+.text-light { color: var(--text-light); }
+
+.grand-total {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 2px dashed var(--border);
+    font-variant-numeric: tabular-nums;
+}
+
+#ui-grand-total {
+    color: var(--accent);
 }
 
 /* =============================== */
 /* RESPONSIVE                      */
 /* =============================== */
 @media (max-width: 992px) {
-    .main-content { flex-direction: column; overflow: visible;}
-    #pos-app { height: auto; }
+    .main-content { flex-direction: column; overflow: visible; }
+    #pos-app { height: auto; padding: 15px; }
+    .right-col { min-width: 100%; }
 }
+
+/* =============================== */
+/* HIDDEN PRINT                    */
+/* =============================== */
+#print-receipt { display: none; }
 
 /* =============================== */
 /* THERMAL PRINTING RULES (80mm)   */
 /* =============================== */
 @media print {
-    /* Hide the App */
-    #pos-app {
-        display: none !important;
-    }
+    #pos-app { display: none !important; }
+    body, html { margin: 0; padding: 0; background: white; }
+    
+    @page { margin: 0; size: 80mm auto; }
 
-    /* Reset Body Margins */
-    body, html {
-        margin: 0;
-        padding: 0;
-        background: white;
-    }
-
-    @page {
-        margin: 0;
-        size: 80mm auto; /* Standard 80mm thermal paper width */
-    }
-
-    /* Show Print Receipt */
     #print-receipt {
         display: block !important;
-        width: 300px; /* ~80mm */
+        width: 300px;
         margin: 0 auto;
         padding: 10px;
-        font-family: monospace, sans-serif;
+        font-family: 'Courier New', Courier, monospace; /* Classic thermal font */
         color: black;
         font-size: 12px;
     }
 
-    .receipt-header {
-        text-align: center;
-        margin-bottom: 10px;
-    }
+    .receipt-header { text-align: center; margin-bottom: 10px; }
+    .print-brand { font-size: 22px; margin: 0 0 4px 0; text-transform: uppercase; font-weight: bold; border-bottom: 2px solid black; display: inline-block; padding-bottom: 2px; }
+    .receipt-header p { margin: 2px 0; font-size: 12px; }
 
-    .receipt-logo {
-        width: 40px;
-        height: auto;
-        margin: 0 auto 5px;
-    }
-
-    .receipt-header h2 {
-        font-size: 18px;
-        margin: 0 0 2px 0;
-        text-transform: uppercase;
-        font-weight: bold;
-    }
-
-    .receipt-header p {
-        margin: 0;
-        font-size: 11px;
-    }
-
-    .receipt-divider {
-        border-top: 1px dashed black;
-        margin: 8px 0;
-    }
-
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 2px;
-    }
-
-    .receipt-items {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .receipt-items th, .receipt-items td {
-        padding: 4px 0;
-        vertical-align: top;
-    }
+    .receipt-divider { border-top: 1px dashed black; margin: 8px 0; }
     
-    .receipt-items th {
-        border-bottom: 1px solid black;
-    }
-
-    .receipt-totals {
-        margin-top: 5px;
-    }
-
-    .total-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 4px;
-    }
-
-    .total-row.grand {
-        font-size: 14px;
-        font-weight: bold;
-        margin-top: 4px;
-        padding-top: 4px;
-        border-top: 1px solid black;
-    }
-
-    .receipt-footer {
-        text-align: center;
-        margin-top: 15px;
-        font-size: 10px;
-    }
+    .info-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+    
+    .receipt-items { width: 100%; border-collapse: collapse; margin-top: 5px;}
+    .receipt-items th, .receipt-items td { padding: 5px 0; vertical-align: top; }
+    .receipt-items th { border-bottom: 1px solid black; font-weight: bold; }
+    
+    .receipt-totals { margin-top: 5px; }
+    .total-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .total-row.grand { font-size: 15px; font-weight: bold; margin-top: 6px; padding-top: 6px; border-top: 1px dashed black; }
+    
+    .receipt-footer { text-align: center; margin-top: 20px; font-size: 11px; }
 }
