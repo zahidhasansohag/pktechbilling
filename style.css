@@ -6,20 +6,20 @@
 }
 
 body{
-    background:#f2f2f2;
+    background:#ececec;
     padding:20px;
 }
 
 .container{
-    max-width:420px;
+    max-width:900px;
     margin:auto;
 }
 
 .receipt{
     background:#fff;
-    padding:15px;
-    border-radius:8px;
-    box-shadow:0 2px 10px rgba(0,0,0,.15);
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
 }
 
 .header{
@@ -27,150 +27,232 @@ body{
 }
 
 .logo{
-    width:80px;
-    margin-bottom:8px;
+    width:85px;
+    margin-bottom:10px;
 }
 
 .header h1{
-    font-size:28px;
+    font-size:34px;
     font-weight:900;
-    margin-bottom:3px;
+    letter-spacing:1px;
 }
 
 .header p{
-    font-size:14px;
+    font-size:15px;
     font-weight:bold;
+    margin-top:3px;
 }
 
 hr{
+    margin:18px 0;
     border:none;
-    border-top:2px dashed #000;
-    margin:12px 0;
+    border-top:2px dashed #999;
+}
+
+.top-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.customer{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
 }
 
 label{
     display:block;
-    margin-top:10px;
-    margin-bottom:4px;
-    font-weight:bold;
+    font-weight:700;
+    margin-bottom:6px;
 }
 
 input,
 select{
     width:100%;
-    padding:8px;
+    padding:10px;
+    border:1px solid #bbb;
+    border-radius:8px;
     font-size:15px;
-    border:1px solid #ccc;
-    border-radius:5px;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    margin-top:10px;
+    margin-top:15px;
 }
 
 th{
-    background:#000;
+    background:#111;
     color:#fff;
-    padding:8px;
+    padding:10px;
     font-size:14px;
 }
 
 td{
-    padding:6px;
-    text-align:center;
-    border-bottom:1px dashed #999;
+    padding:8px;
+    border-bottom:1px solid #ddd;
 }
 
-button{
-    width:100%;
-    padding:12px;
-    margin-top:12px;
+td input{
     border:none;
-    border-radius:6px;
-    background:#000;
-    color:#fff;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-button:hover{
-    opacity:.9;
+    background:transparent;
+    padding:4px;
 }
 
 .summary{
     margin-top:15px;
 }
 
-h2{
-    margin-top:15px;
-    text-align:right;
+.summary .row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.summary .grand{
     font-size:22px;
     font-weight:900;
 }
 
-/* ---------- PRINT ---------- */
+.payment{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:15px;
+}
+
+.due-box{
+    font-size:22px;
+    font-weight:bold;
+    text-align:right;
+}
+
+.buttons{
+    display:flex;
+    gap:15px;
+}
+
+button{
+    flex:1;
+    padding:14px;
+    background:#111;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:700;
+}
+
+button:hover{
+    background:#333;
+}
+
+/* Mobile */
+
+@media(max-width:700px){
+
+.top-grid{
+grid-template-columns:1fr;
+}
+
+.customer{
+grid-template-columns:1fr;
+}
+
+.buttons{
+flex-direction:column;
+}
+
+.receipt{
+padding:15px;
+}
+
+.logo{
+width:70px;
+}
+
+.header h1{
+font-size:28px;
+}
+
+}
+
+/* 80mm Thermal Print */
 
 @media print{
 
 body{
-    background:#fff;
-    padding:0;
+background:#fff;
+padding:0;
 }
 
 .container{
-    max-width:80mm;
-    width:80mm;
-    margin:0;
+max-width:80mm;
+width:80mm;
+margin:0;
 }
 
 .receipt{
-    width:80mm;
-    box-shadow:none;
-    border:none;
-    border-radius:0;
-    padding:5mm;
+box-shadow:none;
+border:none;
+padding:2mm;
+width:80mm;
 }
 
 button{
-    display:none;
+display:none;
 }
 
 input,
 select{
-    border:none;
-    padding:0;
-    font-weight:bold;
-    font-size:14px;
+border:none;
+padding:0;
+font-size:12px;
+font-weight:bold;
 }
 
 .logo{
-    width:65px;
+width:55px;
 }
 
 .header h1{
-    font-size:22px;
+font-size:22px;
 }
 
 .header p{
-    font-size:12px;
+font-size:11px;
 }
 
 table{
-    font-size:12px;
+font-size:11px;
 }
 
 th{
-    background:#fff;
-    color:#000;
-    border-top:1px solid #000;
-    border-bottom:1px solid #000;
+background:#fff;
+color:#000;
+border-top:1px solid #000;
+border-bottom:1px solid #000;
+padding:5px;
 }
 
 td{
-    border-bottom:1px dashed #000;
+padding:4px;
+border-bottom:1px dashed #000;
+}
+
+.summary .grand{
+font-size:18px;
+}
+
+hr{
+border-top:1px dashed #000;
+}
+
+#printBtn,
+#clearBtn{
+display:none;
 }
 
 }
