@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PK TECH Receipt</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="receipt">
+
+<div class="header">
+
+<img src="logo.png" class="logo">
+
+<h1>PK TECH</h1>
+
+<p>ISP & Networking Solution</p>
+
+<p>+880 1750-841314</p>
+
+</div>
+
+<hr>
+
+<div class="invoice">
+
+<label>Invoice No</label>
+<input type="text" id="invoice" value="INV-000001">
+
+<label>Customer Name</label>
+<input type="text" id="customer">
+
+<label>Mobile Number</label>
+<input type="text" id="mobile">
+
+</div>
+
+<hr>
+
+<table id="items">
+
+<thead>
+
+<tr>
+
+<th>Item</th>
+
+<th>Qty</th>
+
+<th>Unit</th>
+
+<th>Total</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tbody">
+
+</tbody>
+
+</table>
+
+<button onclick="addItem()">
+
++ Add Item
+
+</button>
+
+<hr>
+
+<div class="summary">
+
+<label>Discount</label>
+
+<input type="number" id="discount" value="0">
+
+<label>Payment</label>
+
+<select id="payment">
+
+<option>Cash</option>
+
+<option>Online</option>
+
+<option>Due</option>
+
+</select>
+
+<label>Paid</label>
+
+<input type="number" id="paid" value="0">
+
+</div>
+
+<h2>
+
+Grand Total :
+<span id="grandTotal">
+
+0
+
+</span>
+
+</h2>
+
+<button onclick="window.print()">
+
+🖨 Print Receipt
+
+</button>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
