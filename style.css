@@ -1,3 +1,4 @@
+
 /* =============================== */
 /* VARIABLES & PREMIUM RESET       */
 /* =============================== */
@@ -449,5 +450,13 @@ input:focus {
     .total-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
     .total-row.grand { font-size: 15px; font-weight: bold; margin-top: 6px; padding-top: 6px; border-top: 1px dashed black; }
     
-    .receipt-footer { text-align: center; margin-top: 20px; font-size: 11px; }
+    .receipt-footer { text-align: center; margin-top: 20px; font-size: input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
+
+
