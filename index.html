@@ -8,7 +8,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f0f2f5">
     <style>
-        /* ইনপুট বক্সগুলো বড় করার জন্য নতুন CSS */
+        /* সাধারণ ইনপুট বক্সগুলো বড় করার জন্য */
         .form-group input[type="text"], 
         .summary-row input[type="number"] {
             width: 100%;
@@ -29,6 +29,22 @@
             align-items: center;
             margin-bottom: 10px;
         }
+        
+        /* টেবিলের ভেতরের (Item, Qty) ইনপুট বক্স বড় করার জন্য */
+        #items-table input {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+        #items-table td {
+            padding: 5px;
+        }
+
+        /* রিসিট প্রিভিউ বক্সের ডিজাইন */
         .receipt-preview {
             width: 100%; 
             height: 250px; 
@@ -95,7 +111,9 @@
                                 </tbody>
                         </table>
                     </div>
-                    <button class="btn btn-add" onclick="addItemRow()" style="margin-top: 10px; padding: 10px; cursor: pointer;">+ Add New Item</button>
+                    <button class="btn btn-add" onclick="addItemRow()" style="margin-top: 10px; padding: 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; width: 100%; font-size: 16px;">
+                        + Add New Item
+                    </button>
                 </section>
             </div>
 
@@ -123,10 +141,10 @@
                 </section>
 
                 <div class="action-buttons" style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button class="btn btn-print" onclick="generateReceiptText()" style="flex: 1; padding: 15px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">
+                    <button class="btn btn-print" onclick="generateReceiptText()" style="flex: 1; padding: 15px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">
                         Generate Receipt
                     </button>
-                    <button class="btn btn-new" onclick="location.reload()" style="flex: 1; padding: 15px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">
+                    <button class="btn btn-new" onclick="location.reload()" style="flex: 1; padding: 15px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">
                         New Bill
                     </button>
                 </div>
@@ -145,7 +163,6 @@
     <script>
     // অটো ডিউ ক্যালকুলেট করার লজিক
     function calculateDue() {
-        // UI-grand-total থেকে ৳ সাইন রিমুভ করে নাম্বার নেওয়া
         let grandTotalText = document.getElementById('ui-grand-total').innerText.replace('৳', '').trim();
         let grandTotal = parseFloat(grandTotalText) || 0;
         let paidAmount = parseFloat(document.getElementById('paid-amount').value) || 0;
@@ -181,6 +198,7 @@
         receipt += `Name: ${name}\n`;
         receipt += `Mobile: ${mobile}\n`;
         receipt += `----------------------------------------\n`;
+        
         // আইটেম হেডার অ্যালাইনমেন্ট
         receipt += `Item             Qty    Unit     Total\n`;
         receipt += `----------------------------------------\n`;
@@ -205,6 +223,8 @@
         receipt += `Paid Amount:             ৳ ${paid.padStart(10)}\n`;
         receipt += `Due Amount:              ৳ ${due.padStart(10)}\n`;
         receipt += `----------------------------------------\n`;
+        // WhatsApp নম্বর অ্যাড করা হলো
+        receipt += `         WhatsApp: 01750-841314\n`;
         receipt += `            ** THANK YOU **\n`;
         
         document.getElementById('thermal-receipt-text').value = receipt;
