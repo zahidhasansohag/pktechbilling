@@ -10,9 +10,6 @@
 </head>
 <body class="fade-in-load">
 
-    <!-- ======================= -->
-    <!-- POS APPLICATION UI      -->
-    <!-- ======================= -->
     <div id="pos-app">
         <header class="app-header premium-glass">
             <div class="brand">
@@ -23,7 +20,6 @@
                     <h1>PK TECH</h1>
                     <p class="subtitle">ISP & Networking Solution</p>
                     <p class="phone">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                         +880 1750-841314
                     </p>
                 </div>
@@ -35,7 +31,6 @@
         </header>
 
         <main class="main-content">
-            <!-- Left Column: Customer & Items -->
             <div class="left-col">
                 <section class="card customer-card slide-up">
                     <h2 class="card-title">Billing Details</h2>
@@ -50,7 +45,7 @@
                         </div>
                         <div class="form-group">
                             <label>Mobile Number</label>
-                            <input type="text" id="customer-mobile" placeholder="e.g. 017XXXXXXXX">
+                            <input type="text" id="customer-mobile" placeholder="017XXXXXXXX">
                         </div>
                     </div>
                 </section>
@@ -61,32 +56,26 @@
                         <table class="pos-table" id="items-table">
                             <thead>
                                 <tr>
-                                    <th style="width: 45%;">Item Name</th>
-                                    <th style="width: 15%;">Qty</th>
-                                    <th style="width: 20%;">Unit Price (৳)</th>
-                                    <th style="width: 15%;">Total (৳)</th>
-                                    <th style="width: 5%;"></th>
+                                    <th>Item Name</th>
+                                    <th>Qty</th>
+                                    <th>Unit Price (৳)</th>
+                                    <th>Total (৳)</th>
+                                    <th></th>
                                 </tr>
                             </thead>
-                            <tbody id="items-body">
-                                <!-- Dynamic rows go here -->
-                            </tbody>
+                            <tbody id="items-body"></tbody>
                         </table>
                     </div>
-                    <button class="btn btn-add" onclick="addItemRow()">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        Add New Item
-                    </button>
+                    <button class="btn btn-add" onclick="addItemRow()">Add New Item</button>
                 </section>
             </div>
 
-            <!-- Right Column: Summary & Actions -->
             <div class="right-col slide-up delay-2">
                 <section class="card summary-card gradient-border">
                     <h2 class="card-title">Order Summary</h2>
                     <div class="summary-row">
-                        <span class="text-light">Subtotal</span>
-                        <span id="ui-subtotal" class="font-medium">৳ 0.00</span>
+                        <span>Subtotal</span>
+                        <span id="ui-subtotal">৳ 0.00</span>
                     </div>
                     <div class="summary-row grand-total">
                         <span>Grand Total</span>
@@ -95,68 +84,55 @@
                 </section>
 
                 <div class="action-buttons">
-                    <button class="btn btn-print pulse-hover" onclick="printReceipt()">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                        Print Receipt
+                    <button class="btn btn-print" onclick="generateReceiptText()">
+                        Generate Receipt Text
                     </button>
-                    <button class="btn btn-new" onclick="newBill()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                        New Bill
-                    </button>
+                    <button class="btn btn-new" onclick="newBill()">New Bill</button>
                 </div>
+
+                <!-- নতুন কপি সেকশন -->
+                <section class="card" style="margin-top:20px;">
+                    <h2 class="card-title">Thermal Copy Area</h2>
+                    <textarea id="thermal-receipt-text" style="width: 100%; height: 150px; font-family: monospace; font-size: 12px;" readonly></textarea>
+                    <button class="btn" style="width: 100%; margin-top:5px;" onclick="copyToClipboard()">Copy Receipt</button>
+                </section>
             </div>
         </main>
     </div>
 
-    <!-- ======================= -->
-    <!-- THERMAL RECEIPT (80mm)  -->
-    <!-- ======================= -->
-    <div id="print-receipt">
-        <div class="receipt-header">
-            <h2 class="print-brand">PK TECH</h2>
-            <p>ISP & Networking Solution</p>
-            <p>+880 1750-841314</p>
-        </div>
+    <script>
+    function generateReceiptText() {
+        const invoice = document.getElementById('invoice-no').value;
+        const name = document.getElementById('customer-name').value || "Walk-in";
+        const mobile = document.getElementById('customer-mobile').value || "N/A";
+        let receipt = `----------------------------------------\n`;
+        receipt += `PPPP   K   K   TTTTT EEEE  CCC  H  H\n`;
+        receipt += `----------------------------------------\n`;
+        receipt += `ISP & Networking Solution\nPhone: 01750-841314\n`;
+        receipt += `----------------------------------------\n`;
+        receipt += `Invoice: ${invoice}\nName: ${name}\nMobile: ${mobile}\n`;
+        receipt += `----------------------------------------\n`;
+        receipt += `Item            Qty   Unit     Total\n`;
         
-        <div class="receipt-divider"></div>
+        const rows = document.querySelectorAll('#items-body tr');
+        rows.forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            receipt += `${inputs[0].value.padEnd(12)} ${inputs[1].value.padEnd(5)} ${inputs[2].value.padEnd(7)} ${row.cells[3].innerText}\n`;
+        });
 
-        <div class="receipt-info">
-            <div class="info-row"><span>Inv:</span> <span id="pr-invoice"></span></div>
-            <div class="info-row"><span>Date:</span> <span id="pr-date"></span></div>
-            <div class="info-row"><span>Time:</span> <span id="pr-time"></span></div>
-            <div class="info-row"><span>Name:</span> <span id="pr-customer"></span></div>
-            <div class="info-row"><span>Mob:</span> <span id="pr-mobile"></span></div>
-        </div>
+        receipt += `----------------------------------------\n`;
+        receipt += `Grand Total: ${document.getElementById('ui-grand-total').innerText}\n`;
+        receipt += `----------------------------------------\n           ** THANK YOU **\n`;
+        document.getElementById('thermal-receipt-text').value = receipt;
+    }
 
-        <div class="receipt-divider"></div>
-
-        <table class="receipt-items">
-            <thead>
-                <tr>
-                    <th style="text-align: left;">Item</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th style="text-align: right;">Total</th>
-                </tr>
-            </thead>
-            <tbody id="pr-items"></tbody>
-        </table>
-
-        <div class="receipt-divider"></div>
-
-        <div class="receipt-totals">
-            <div class="total-row"><span>Subtotal:</span> <span id="pr-subtotal"></span></div>
-            <div class="total-row grand"><span>Grand Total:</span> <span id="pr-grand"></span></div>
-        </div>
-
-        <div class="receipt-divider"></div>
-
-        <div class="receipt-footer">
-            <p>*** THANK YOU ***</p>
-            <p>Software by PK TECH</p>
-        </div>
-    </div>
-
+    function copyToClipboard() {
+        const copyText = document.getElementById("thermal-receipt-text");
+        copyText.select();
+        document.execCommand("copy");
+        alert("কপি হয়েছে! এখন RawBT-তে পেস্ট করুন।");
+    }
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
