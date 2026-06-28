@@ -47,7 +47,7 @@
         /* রিসিট প্রিভিউ বক্সের ডিজাইন */
         .receipt-preview {
             width: 100%; 
-            height: 250px; 
+            height: 350px; 
             font-family: 'Courier New', Courier, monospace; 
             font-size: 12px; 
             border: 1px solid #ccc;
@@ -76,6 +76,7 @@
         </header>
 
         <main class="main-content">
+            <!-- Left Column: Customer & Items -->
             <div class="left-col">
                 <section class="card customer-card">
                     <h2 class="card-title">Billing Details</h2>
@@ -108,7 +109,8 @@
                                 </tr>
                             </thead>
                             <tbody id="items-body">
-                                </tbody>
+                                <!-- script.js থেকে আইটেম রো গুলো এখানে আসবে -->
+                            </tbody>
                         </table>
                     </div>
                     <button class="btn btn-add" onclick="addItemRow()" style="margin-top: 10px; padding: 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; width: 100%; font-size: 16px;">
@@ -117,6 +119,7 @@
                 </section>
             </div>
 
+            <!-- Right Column: Summary & Actions -->
             <div class="right-col">
                 <section class="card summary-card gradient-border">
                     <h2 class="card-title">Order Summary</h2>
@@ -130,6 +133,7 @@
                     </div>
                     <hr style="border: 0.5px solid #ddd; margin: 15px 0;">
                     
+                    <!-- Paid and Due Section -->
                     <div class="summary-row">
                         <label style="font-weight: bold;">Paid (৳):</label>
                         <input type="number" id="paid-amount" oninput="calculateDue()" placeholder="0.00">
@@ -140,6 +144,7 @@
                     </div>
                 </section>
 
+                <!-- Action Buttons -->
                 <div class="action-buttons" style="display: flex; gap: 10px; margin-top: 20px;">
                     <button class="btn btn-print" onclick="generateReceiptText()" style="flex: 1; padding: 15px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">
                         Generate Receipt
@@ -149,6 +154,7 @@
                     </button>
                 </div>
 
+                <!-- Thermal Copy Area -->
                 <section class="card" style="margin-top:20px;">
                     <h2 class="card-title">Thermal Receipt Text</h2>
                     <textarea id="thermal-receipt-text" class="receipt-preview" readonly></textarea>
@@ -160,6 +166,7 @@
         </main>
     </div>
 
+    <!-- JavaScript লজিক -->
     <script>
     // অটো ডিউ ক্যালকুলেট করার লজিক
     function calculateDue() {
@@ -168,7 +175,7 @@
         let paidAmount = parseFloat(document.getElementById('paid-amount').value) || 0;
         
         let dueAmount = grandTotal - paidAmount;
-        if(dueAmount < 0) dueAmount = 0; // বেশি টাকা দিলে ডিউ মাইনাস হবে না
+        if(dueAmount < 0) dueAmount = 0; 
         
         document.getElementById('due-amount').value = dueAmount.toFixed(2);
     }
@@ -184,12 +191,20 @@
         const due = document.getElementById('due-amount').value || "0.00";
 
         let receipt = `----------------------------------------\n`;
-        // বড় PK TECH লোগো
-        receipt += `PPPP   K   K   TTTTT EEEE  CCC  H  H\n`;
-        receipt += `P   P  K  K      T   E    C     H  H\n`;
-        receipt += `PPPP   KKK       T   EEE  C     HHHH\n`;
-        receipt += `P      K  K      T   E    C     H  H\n`;
-        receipt += `P      K   K     T   EEEE  CCC  H  H\n`;
+        
+        // সম্পূর্ণ নতুন বিশাল এবং বোল্ড PK TECH টেক্সট আর্ট
+        receipt += `       ######   #    #\n`;
+        receipt += `       #     #  #   # \n`;
+        receipt += `       ######   ####  \n`;
+        receipt += `       #        #  #  \n`;
+        receipt += `       #        #   # \n`;
+        receipt += `\n`;
+        receipt += ` ####### #######  #####  #     #\n`;
+        receipt += `    #    #       #     # #     #\n`;
+        receipt += `    #    #####   #       #######\n`;
+        receipt += `    #    #       #     # #     #\n`;
+        receipt += `    #    #######  #####  #     #\n`;
+        
         receipt += `----------------------------------------\n`;
         receipt += `       ISP & Networking Solution\n`;
         receipt += `         Phone: 01750-841314\n`;
@@ -203,16 +218,21 @@
         receipt += `Item             Qty    Unit     Total\n`;
         receipt += `----------------------------------------\n`;
         
-        // কার্টের আইটেমগুলো অ্যাড করা
+        // কার্টের আইটেমগুলো অ্যাড করা এবং Total ফিক্স করা
         const rows = document.querySelectorAll('#items-body tr');
         rows.forEach(row => {
             const inputs = row.querySelectorAll('input');
             if(inputs.length >= 3) {
-                // Item Name (Max 14 chars), Qty (Max 4 chars), Price (Max 6 chars), Total (Max 8 chars)
                 let itemName = inputs[0].value.substring(0, 14).padEnd(14);
+                
+                // Total-এর সমস্যা ফিক্স করা হলো (সরাসরি গুণ করে)
+                let qtyVal = parseFloat(inputs[1].value) || 0;
+                let priceVal = parseFloat(inputs[2].value) || 0;
+                let calculatedTotal = (qtyVal * priceVal).toString(); 
+                
                 let itemQty = inputs[1].value.padStart(5);
                 let itemPrice = inputs[2].value.padStart(8);
-                let itemTotal = row.cells[3].innerText.replace('৳', '').trim().padStart(9);
+                let itemTotal = calculatedTotal.padStart(9);
                 
                 receipt += `${itemName} ${itemQty} ${itemPrice} ${itemTotal}\n`;
             }
@@ -223,7 +243,6 @@
         receipt += `Paid Amount:             ৳ ${paid.padStart(10)}\n`;
         receipt += `Due Amount:              ৳ ${due.padStart(10)}\n`;
         receipt += `----------------------------------------\n`;
-        // WhatsApp নম্বর অ্যাড করা হলো
         receipt += `         WhatsApp: 01750-841314\n`;
         receipt += `            ** THANK YOU **\n`;
         
@@ -243,6 +262,7 @@
     }
     </script>
     
+    <!-- আপনার existing script.js ফাইল -->
     <script src="script.js"></script>
 </body>
 </html>
