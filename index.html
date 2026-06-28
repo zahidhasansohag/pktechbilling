@@ -7,21 +7,50 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f0f2f5">
+    <style>
+        /* ইনপুট বক্সগুলো বড় করার জন্য নতুন CSS */
+        .form-group input[type="text"], 
+        .summary-row input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        .summary-row input[type="number"] {
+            width: 60%;
+            text-align: right;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .receipt-preview {
+            width: 100%; 
+            height: 250px; 
+            font-family: 'Courier New', Courier, monospace; 
+            font-size: 12px; 
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #f9f9f9;
+            white-space: pre;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body class="fade-in-load">
 
     <div id="pos-app">
         <header class="app-header premium-glass">
             <div class="brand">
-                <div class="logo-container" id="logo-container">
-                    <img src="logo.png" alt="PK TECH Logo" class="logo" id="brand-logo" onerror="handleLogoError()">
-                </div>
                 <div class="brand-info">
                     <h1>PK TECH</h1>
                     <p class="subtitle">ISP & Networking Solution</p>
-                    <p class="phone">
-                        +880 1750-841314
-                    </p>
+                    <p class="phone">+880 1750-841314</p>
                 </div>
             </div>
             <div class="datetime">
@@ -32,7 +61,7 @@
 
         <main class="main-content">
             <div class="left-col">
-                <section class="card customer-card slide-up">
+                <section class="card customer-card">
                     <h2 class="card-title">Billing Details</h2>
                     <div class="form-grid">
                         <div class="form-group">
@@ -50,89 +79,150 @@
                     </div>
                 </section>
 
-                <section class="card items-card slide-up delay-1">
+                <section class="card items-card" style="margin-top: 20px;">
                     <h2 class="card-title">Cart Items</h2>
                     <div class="table-responsive">
-                        <table class="pos-table" id="items-table">
+                        <table class="pos-table" id="items-table" style="width: 100%; text-align: left;">
                             <thead>
                                 <tr>
                                     <th>Item Name</th>
                                     <th>Qty</th>
                                     <th>Unit Price (৳)</th>
                                     <th>Total (৳)</th>
-                                    <th></th>
                                 </tr>
                             </thead>
-                            <tbody id="items-body"></tbody>
+                            <tbody id="items-body">
+                                </tbody>
                         </table>
                     </div>
-                    <button class="btn btn-add" onclick="addItemRow()">Add New Item</button>
+                    <button class="btn btn-add" onclick="addItemRow()" style="margin-top: 10px; padding: 10px; cursor: pointer;">+ Add New Item</button>
                 </section>
             </div>
 
-            <div class="right-col slide-up delay-2">
+            <div class="right-col">
                 <section class="card summary-card gradient-border">
                     <h2 class="card-title">Order Summary</h2>
                     <div class="summary-row">
                         <span>Subtotal</span>
                         <span id="ui-subtotal">৳ 0.00</span>
                     </div>
-                    <div class="summary-row grand-total">
+                    <div class="summary-row grand-total" style="font-weight: bold; font-size: 1.2em;">
                         <span>Grand Total</span>
-                        <span id="ui-grand-total">৳ 0.00</span>
+                        <span id="ui-grand-total">0.00</span>
+                    </div>
+                    <hr style="border: 0.5px solid #ddd; margin: 15px 0;">
+                    
+                    <div class="summary-row">
+                        <label style="font-weight: bold;">Paid (৳):</label>
+                        <input type="number" id="paid-amount" oninput="calculateDue()" placeholder="0.00">
+                    </div>
+                    <div class="summary-row">
+                        <label style="font-weight: bold; color: red;">Due (৳):</label>
+                        <input type="number" id="due-amount" readonly style="background: #ffe6e6; color: red; font-weight: bold;">
                     </div>
                 </section>
 
-                <div class="action-buttons">
-                    <button class="btn btn-print" onclick="generateReceiptText()">
-                        Generate Receipt Text
+                <div class="action-buttons" style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-print" onclick="generateReceiptText()" style="flex: 1; padding: 15px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">
+                        Generate Receipt
                     </button>
-                    <button class="btn btn-new" onclick="newBill()">New Bill</button>
+                    <button class="btn btn-new" onclick="location.reload()" style="flex: 1; padding: 15px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">
+                        New Bill
+                    </button>
                 </div>
 
-                <!-- নতুন কপি সেকশন -->
                 <section class="card" style="margin-top:20px;">
-                    <h2 class="card-title">Thermal Copy Area</h2>
-                    <textarea id="thermal-receipt-text" style="width: 100%; height: 150px; font-family: monospace; font-size: 12px;" readonly></textarea>
-                    <button class="btn" style="width: 100%; margin-top:5px;" onclick="copyToClipboard()">Copy Receipt</button>
+                    <h2 class="card-title">Thermal Receipt Text</h2>
+                    <textarea id="thermal-receipt-text" class="receipt-preview" readonly></textarea>
+                    <button class="btn" style="width: 100%; padding: 15px; margin-top: 10px; background: #ffc107; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px;" onclick="copyToClipboard()">
+                        Copy For RawBT
+                    </button>
                 </section>
             </div>
         </main>
     </div>
 
     <script>
+    // অটো ডিউ ক্যালকুলেট করার লজিক
+    function calculateDue() {
+        // UI-grand-total থেকে ৳ সাইন রিমুভ করে নাম্বার নেওয়া
+        let grandTotalText = document.getElementById('ui-grand-total').innerText.replace('৳', '').trim();
+        let grandTotal = parseFloat(grandTotalText) || 0;
+        let paidAmount = parseFloat(document.getElementById('paid-amount').value) || 0;
+        
+        let dueAmount = grandTotal - paidAmount;
+        if(dueAmount < 0) dueAmount = 0; // বেশি টাকা দিলে ডিউ মাইনাস হবে না
+        
+        document.getElementById('due-amount').value = dueAmount.toFixed(2);
+    }
+
+    // রিসিট টেক্সট তৈরি করার লজিক (40 ক্যারেক্টার উইডথ)
     function generateReceiptText() {
-        const invoice = document.getElementById('invoice-no').value;
+        const invoice = document.getElementById('invoice-no') ? document.getElementById('invoice-no').value : "INV-1001";
         const name = document.getElementById('customer-name').value || "Walk-in";
         const mobile = document.getElementById('customer-mobile').value || "N/A";
-        let receipt = `----------------------------------------\n`;
-        receipt += `PPPP   K   K   TTTTT EEEE  CCC  H  H\n`;
-        receipt += `----------------------------------------\n`;
-        receipt += `ISP & Networking Solution\nPhone: 01750-841314\n`;
-        receipt += `----------------------------------------\n`;
-        receipt += `Invoice: ${invoice}\nName: ${name}\nMobile: ${mobile}\n`;
-        receipt += `----------------------------------------\n`;
-        receipt += `Item            Qty   Unit     Total\n`;
         
+        const grandTotal = document.getElementById('ui-grand-total').innerText.trim() || "0.00";
+        const paid = document.getElementById('paid-amount').value || "0.00";
+        const due = document.getElementById('due-amount').value || "0.00";
+
+        let receipt = `----------------------------------------\n`;
+        // বড় PK TECH লোগো
+        receipt += `PPPP   K   K   TTTTT EEEE  CCC  H  H\n`;
+        receipt += `P   P  K  K      T   E    C     H  H\n`;
+        receipt += `PPPP   KKK       T   EEE  C     HHHH\n`;
+        receipt += `P      K  K      T   E    C     H  H\n`;
+        receipt += `P      K   K     T   EEEE  CCC  H  H\n`;
+        receipt += `----------------------------------------\n`;
+        receipt += `       ISP & Networking Solution\n`;
+        receipt += `         Phone: 01750-841314\n`;
+        receipt += `----------------------------------------\n`;
+        receipt += `Invoice: ${invoice}\n`;
+        receipt += `Name: ${name}\n`;
+        receipt += `Mobile: ${mobile}\n`;
+        receipt += `----------------------------------------\n`;
+        // আইটেম হেডার অ্যালাইনমেন্ট
+        receipt += `Item             Qty    Unit     Total\n`;
+        receipt += `----------------------------------------\n`;
+        
+        // কার্টের আইটেমগুলো অ্যাড করা
         const rows = document.querySelectorAll('#items-body tr');
         rows.forEach(row => {
             const inputs = row.querySelectorAll('input');
-            receipt += `${inputs[0].value.padEnd(12)} ${inputs[1].value.padEnd(5)} ${inputs[2].value.padEnd(7)} ${row.cells[3].innerText}\n`;
+            if(inputs.length >= 3) {
+                // Item Name (Max 14 chars), Qty (Max 4 chars), Price (Max 6 chars), Total (Max 8 chars)
+                let itemName = inputs[0].value.substring(0, 14).padEnd(14);
+                let itemQty = inputs[1].value.padStart(5);
+                let itemPrice = inputs[2].value.padStart(8);
+                let itemTotal = row.cells[3].innerText.replace('৳', '').trim().padStart(9);
+                
+                receipt += `${itemName} ${itemQty} ${itemPrice} ${itemTotal}\n`;
+            }
         });
 
         receipt += `----------------------------------------\n`;
-        receipt += `Grand Total: ${document.getElementById('ui-grand-total').innerText}\n`;
-        receipt += `----------------------------------------\n           ** THANK YOU **\n`;
+        receipt += `Grand Total:             ৳ ${grandTotal.replace('৳', '').trim().padStart(10)}\n`;
+        receipt += `Paid Amount:             ৳ ${paid.padStart(10)}\n`;
+        receipt += `Due Amount:              ৳ ${due.padStart(10)}\n`;
+        receipt += `----------------------------------------\n`;
+        receipt += `            ** THANK YOU **\n`;
+        
         document.getElementById('thermal-receipt-text').value = receipt;
     }
 
+    // কপি করার ফাংশন
     function copyToClipboard() {
         const copyText = document.getElementById("thermal-receipt-text");
+        if(copyText.value === "") {
+            alert("আগে Generate Receipt বাটনে ক্লিক করুন!");
+            return;
+        }
         copyText.select();
         document.execCommand("copy");
-        alert("কপি হয়েছে! এখন RawBT-তে পেস্ট করুন।");
+        alert("কপি হয়েছে! এখন RawBT অ্যাপে পেস্ট করুন।");
     }
     </script>
+    
     <script src="script.js"></script>
 </body>
 </html>
