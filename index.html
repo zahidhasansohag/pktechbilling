@@ -22,6 +22,7 @@
         .summary-row input[type="number"] {
             width: 60%;
             text-align: right;
+            font-weight: bold;
         }
         .summary-row {
             display: flex;
@@ -44,15 +45,17 @@
             padding: 5px;
         }
 
-        /* রিসিট প্রিভিউ বক্সের ডিজাইন */
+        /* রিসিট প্রিভিউ বক্সের ডিজাইন (বোল্ড ফন্ট) */
         .receipt-preview {
             width: 100%; 
             height: 350px; 
             font-family: 'Courier New', Courier, monospace; 
-            font-size: 12px; 
+            font-size: 13px; 
+            font-weight: bold; /* Bold Font */
+            color: #000;
             border: 1px solid #ccc;
             padding: 10px;
-            background: #f9f9f9;
+            background: #fff;
             white-space: pre;
             overflow-y: auto;
         }
@@ -69,10 +72,6 @@
                     <p class="phone">+880 1750-841314</p>
                 </div>
             </div>
-            <div class="datetime">
-                <div class="date-box" id="current-date">--</div>
-                <div class="time-box" id="current-time">--:--:--</div>
-            </div>
         </header>
 
         <main class="main-content">
@@ -81,10 +80,6 @@
                 <section class="card customer-card">
                     <h2 class="card-title">Billing Details</h2>
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>Invoice No.</label>
-                            <input type="text" id="invoice-no" readonly class="readonly-input">
-                        </div>
                         <div class="form-group">
                             <label>Customer Name</label>
                             <input type="text" id="customer-name" placeholder="Walk-in Customer">
@@ -113,7 +108,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <button class="btn btn-add" onclick="addItemRow()" style="margin-top: 10px; padding: 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; width: 100%; font-size: 16px;">
+                    <button class="btn btn-add" onclick="addItemRow()" style="margin-top: 10px; padding: 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; width: 100%; font-size: 16px; font-weight: bold;">
                         + Add New Item
                     </button>
                 </section>
@@ -180,71 +175,75 @@
         document.getElementById('due-amount').value = dueAmount.toFixed(2);
     }
 
-    // রিসিট টেক্সট তৈরি করার লজিক (40 ক্যারেক্টার উইডথ)
+    // 48 ক্যারেক্টার উইডথ অনুযায়ী সেন্টারে আনার ফাংশন
+    function centerText(text, width = 48) {
+        if (text.length >= width) return text.substring(0, width);
+        let leftPadding = Math.floor((width - text.length) / 2);
+        return ' '.repeat(leftPadding) + text;
+    }
+
+    // রিসিট টেক্সট তৈরি করার লজিক (80mm = 48 characters width)
     function generateReceiptText() {
-        const invoice = document.getElementById('invoice-no') ? document.getElementById('invoice-no').value : "INV-1001";
         const name = document.getElementById('customer-name').value || "Walk-in";
         const mobile = document.getElementById('customer-mobile').value || "N/A";
         
-        const grandTotal = document.getElementById('ui-grand-total').innerText.trim() || "0.00";
+        const grandTotal = document.getElementById('ui-grand-total').innerText.replace('৳', '').trim() || "0.00";
         const paid = document.getElementById('paid-amount').value || "0.00";
         const due = document.getElementById('due-amount').value || "0.00";
 
-        let receipt = `----------------------------------------\n`;
+        const line = "------------------------------------------------\n"; // 48 dashes
         
-        // সম্পূর্ণ নতুন বিশাল এবং বোল্ড PK TECH টেক্সট আর্ট
-        receipt += `       ######   #    #\n`;
-        receipt += `       #     #  #   # \n`;
-        receipt += `       ######   ####  \n`;
-        receipt += `       #        #  #  \n`;
-        receipt += `       #        #   # \n`;
-        receipt += `\n`;
-        receipt += ` ####### #######  #####  #     #\n`;
-        receipt += `    #    #       #     # #     #\n`;
-        receipt += `    #    #####   #       #######\n`;
-        receipt += `    #    #       #     # #     #\n`;
-        receipt += `    #    #######  #####  #     #\n`;
+        let receipt = line;
         
-        receipt += `----------------------------------------\n`;
-        receipt += `       ISP & Networking Solution\n`;
-        receipt += `         Phone: 01750-841314\n`;
-        receipt += `----------------------------------------\n`;
-        receipt += `Invoice: ${invoice}\n`;
-        receipt += `Name: ${name}\n`;
-        receipt += `Mobile: ${mobile}\n`;
-        receipt += `----------------------------------------\n`;
+        // 80mm উপযোগী বড় এবং বোল্ড লোগো
+        receipt += centerText("PPPP  K  K  TTTTT EEEE  CCC  H  H") + "\n";
+        receipt += centerText("P   P K K     T   E    C   C H  H") + "\n";
+        receipt += centerText("PPPP  KK      T   EEE  C     HHHH") + "\n";
+        receipt += centerText("P     K K     T   E    C   C H  H") + "\n";
+        receipt += centerText("P     K  K    T   EEEE  CCC  H  H") + "\n";
+        receipt += line;
         
-        // আইটেম হেডার অ্যালাইনমেন্ট
-        receipt += `Item             Qty    Unit     Total\n`;
-        receipt += `----------------------------------------\n`;
+        receipt += centerText("ISP & Networking Solution") + "\n";
+        receipt += centerText("Phone: 01750-841314") + "\n";
+        receipt += line;
         
-        // কার্টের আইটেমগুলো অ্যাড করা এবং Total ফিক্স করা
+        // কাস্টমার ইনফো সেন্টারে
+        receipt += centerText(`Name: ${name}`) + "\n";
+        receipt += centerText(`Mobile: ${mobile}`) + "\n";
+        receipt += line;
+        
+        // আইটেম হেডার (Item=18, Qty=6, Price=10, Total=14 => Total 48)
+        receipt += "Item".padEnd(18) + "Qty".padStart(6) + "Price".padStart(10) + "Total".padStart(14) + "\n";
+        receipt += line;
+        
+        // কার্টের আইটেমগুলো অ্যাড করা
         const rows = document.querySelectorAll('#items-body tr');
         rows.forEach(row => {
             const inputs = row.querySelectorAll('input');
             if(inputs.length >= 3) {
-                let itemName = inputs[0].value.substring(0, 14).padEnd(14);
+                let itemName = inputs[0].value.substring(0, 17).padEnd(18);
                 
-                // Total-এর সমস্যা ফিক্স করা হলো (সরাসরি গুণ করে)
                 let qtyVal = parseFloat(inputs[1].value) || 0;
                 let priceVal = parseFloat(inputs[2].value) || 0;
                 let calculatedTotal = (qtyVal * priceVal).toString(); 
                 
-                let itemQty = inputs[1].value.padStart(5);
-                let itemPrice = inputs[2].value.padStart(8);
-                let itemTotal = calculatedTotal.padStart(9);
+                let itemQty = qtyVal.toString().padStart(6);
+                let itemPrice = priceVal.toString().padStart(10);
+                let itemTotal = calculatedTotal.padStart(14);
                 
-                receipt += `${itemName} ${itemQty} ${itemPrice} ${itemTotal}\n`;
+                receipt += `${itemName}${itemQty}${itemPrice}${itemTotal}\n`;
             }
         });
 
-        receipt += `----------------------------------------\n`;
-        receipt += `Grand Total:             ৳ ${grandTotal.replace('৳', '').trim().padStart(10)}\n`;
-        receipt += `Paid Amount:             ৳ ${paid.padStart(10)}\n`;
-        receipt += `Due Amount:              ৳ ${due.padStart(10)}\n`;
-        receipt += `----------------------------------------\n`;
-        receipt += `         WhatsApp: 01750-841314\n`;
-        receipt += `            ** THANK YOU **\n`;
+        receipt += line;
+        // টোটাল, পেইড, ডিউ ডান দিকে অ্যালাইন করা
+        receipt += "Grand Total:".padEnd(24) + `৳ ${grandTotal}`.padStart(24) + "\n";
+        receipt += "Paid Amount:".padEnd(24) + `৳ ${paid}`.padStart(24) + "\n";
+        receipt += "Due Amount:".padEnd(24) + `৳ ${due}`.padStart(24) + "\n";
+        receipt += line;
+        
+        receipt += centerText("WhatsApp: 01750-841314") + "\n";
+        receipt += centerText("** THANK YOU **") + "\n";
         
         document.getElementById('thermal-receipt-text').value = receipt;
     }
